@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Root</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .hero-section {
+            background-color: #343a40; /* 어두운 배경색 */
+            color: #ffffff; /* 글씨 색상 */
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="index.html">Movie Root</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="good.html">평점순</a>
+                <a class="nav-item nav-link" href="new.html">최신순</a>
+                <a class="nav-item nav-link" href="#">장르별</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section text-center py-5">
+        <h1 class="display-4">Movie Root</h1>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row" id="movies-container">
+            <!-- 영화 정보가 여기에 표시됩니다 -->
+        </div>
+    </div>
+    
+    <!-- 페이지네이션 버튼 -->
+    <div class="d-flex justify-content-between my-4">
+        <button id="prev-page" class="btn btn-primary">이전 페이지</button>
+        <button id="next-page" class="btn btn-primary">다음 페이지</button>
+    </div>
+    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function() {
+    let currentPage = 1; // 현재 페이지 번호
+
+    function fetchMovies(page) {
+        const apiKey = '41b8d7f430c6240b738b350851b6bad4'; // TMDB API 키
+        // 영화 정보를 평점 순으로 요청하는 URL
+        const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ko-KR&sort_by=vote_average.desc&include_adult=false&include_video=false&page=${page}`;
+
+        $.get(url, function(data) {
+            const movies = data.results.slice(0, 10); // 받아온 영화 목록에서 처음 10개의 영화 정보만 사용
+            let moviesHtml = '';
+
+            movies.forEach(movie => {
+                const title = movie.title; // 영화 제목
+                const overview = movie.overview; // 영화 소개
+                const voteAverage = movie.vote_average; // 영화 평점
+                const posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`; // 영화 포스터 이미지 경로
+                
+                moviesHtml += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="${posterPath}" class="card-img-top" alt="${title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${title}</h5>
+                                <p class="card-text">${overview}</p>
+                                <p class="card-text">평점: ${voteAverage}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            $('#movies-container').html(moviesHtml);
+        });
+    }
+
+    // 페이지 버튼 이벤트 리스너
+    $('#next-page').click(function() {
+        currentPage++;
+        fetchMovies(currentPage);
+    });
+
+    $('#prev-page').click(function() {
+        if (currentPage > 1) { // 첫 페이지에서는 이전 페이지로 이동할 수 없음
+            currentPage--;
+            fetchMovies(currentPage);
+        }
+    });
+
+    // 초기 영화 목록 로드
+    fetchMovies(currentPage);
+});
+
+        </script>
+        
+</body>
+</html>
