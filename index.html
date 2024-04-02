@@ -65,7 +65,7 @@ $(document).ready(function() {
             // 영화를 랜덤하게 섞음
             const shuffledMovies = movies.sort(() => 0.5 - Math.random());
             // 랜덤하게 섞인 영화 중에서 상위 10개 선택
-            const selectedMovies = shuffledMovies.slice(0, 10);
+            const selectedMovies = shuffledMovies.slice(0, 9);
             let moviesHtml = '';
             
             selectedMovies.forEach(movie => {
