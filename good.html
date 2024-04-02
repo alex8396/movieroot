@@ -73,19 +73,18 @@
 $(document).ready(function() {
     let currentPage = 1;
 
-    // 평점이 높은 영화를 불러오는 함수
-    const loadTopRatedMovies = (page) => {
+    // 인기도가 높은 영화를 불러오는 함수
+    const loadPopularMovies = (page) => {
         const apiKey = '41b8d7f430c6240b738b350851b6bad4';
-        // sort_by=vote_average.desc를 추가하여 평점이 높은 순으로 정렬
-        const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ko-KR&sort_by=vote_average.desc&include_adult=false&page=${page}`;
+        // sort_by=popularity.desc를 추가하여 인기도가 높은 순으로 정렬
+        const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ko-KR&sort_by=popularity.desc&include_adult=false&page=${page}`;
 
         $.get(url, function(data) {
             const movies = data.results.slice(0, 9);
             let moviesHtml = '';
             
             movies.forEach(movie => {
-                // 조건 추가: 평점이 0인 영화는 표시하지 않음
-                if (movie.vote_average > 0) {
+                if (movie.vote_average > 0) { // 평점이 0보다 큰 영화만 표시
                     const title = movie.title;
                     const overview = movie.overview;
                     const rating = movie.vote_average;
@@ -107,67 +106,30 @@ $(document).ready(function() {
             });
             
             if (moviesHtml === '') {
-                $('#movies-container').html('<div class="col-12"><p>평점이 높은 영화가 없습니다.</p></div>');
+                $('#movies-container').html('<div class="col-12"><p>인기 영화가 없습니다.</p></div>');
             } else {
                 $('#movies-container').html(moviesHtml);
             }
         });
     };
 
-    loadTopRatedMovies(currentPage);
+    loadPopularMovies(currentPage); // 페이지 로드 시 인기 영화 불러오기
 
+    // 페이지네이션의 이전/다음 버튼 이벤트
     $('#next').click(function(e) {
         e.preventDefault();
         currentPage += 1;
-        loadTopRatedMovies(currentPage);
+        loadPopularMovies(currentPage);
     });
 
     $('#prev').click(function(e) {
         e.preventDefault();
         if (currentPage > 1) {
             currentPage -= 1;
-            loadTopRatedMovies(currentPage);
+            loadPopularMovies(currentPage);
         }
     });
 });
-// 영화 검색 함수
-const searchMovies = (query) => {
-    const apiKey = '41b8d7f430c6240b738b350851b6bad4';
-    const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=ko-KR&query=${encodeURIComponent(query)}&include_adult=false`;
-
-    $.get(url, function(data) {
-        const movies = data.results.slice(0, 9);
-        let moviesHtml = '';
-        
-        movies.forEach(movie => {
-            if (movie.vote_average > 0) { // 평점이 0보다 큰 영화만 표시
-                const title = movie.title;
-                const overview = movie.overview;
-                const rating = movie.vote_average;
-                const posterPath = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '이미지가 없습니다.';
-                
-                moviesHtml += `
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <img src="${posterPath}" class="card-img-top" alt="${title}">
-                            <div class="card-body">
-                                <h5 class="card-title">${title}</h5>
-                                <p class="card-text">${overview}</p>
-                                <p class="card-text"><small class="text-muted">평점: ${rating}</small></p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-        
-        if (moviesHtml === '') {
-            $('#movies-container').html('<div class="col-12"><p>검색 결과가 없습니다.</p></div>');
-        } else {
-            $('#movies-container').html(moviesHtml);
-        }
-    });
-};
 
 // 검색 폼 제출 이벤트 리스너
 $('#search-form').submit(function(e) {
