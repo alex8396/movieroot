@@ -56,7 +56,7 @@
         const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ko-KR&sort_by=vote_average.desc&include_adult=false&include_video=false&page=${page}`;
 
         $.get(url, function(data) {
-            const movies = data.results.slice(0, 10); // 받아온 영화 목록에서 처음 10개의 영화 정보만 사용
+            const movies = data.results.slice(0, 9); // 받아온 영화 목록에서 처음 10개의 영화 정보만 사용
             let moviesHtml = '';
 
             movies.forEach(movie => {
