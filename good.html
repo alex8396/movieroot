@@ -103,47 +103,7 @@
             });
         });
     </script>
-        moviesHtml += `
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <img src="${posterPath}" class="card-img-top" alt="${title}">
-            <div class="card-body">
-                <h5 class="card-title">${title}</h5>
-                <p class="card-text">${overview}</p>
-                <p class="card-text">평점: ${voteAverage}</p>
-                <button class="btn btn-primary view-detail" data-id="${movie.id}">상세 정보 보기</button>
-            </div>
-        </div>
-    </div>
-`;
-function fetchMovieDetails(movieId) {
-    const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=ko-KR`;
-    const reviewsUrl = `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${apiKey}&language=ko-KR`;
 
-    $.get(detailsUrl, function(details) {
-        // 여기에서 상세 정보 처리
-    });
-
-    $.get(reviewsUrl, function(reviews) {
-        // 여기에서 리뷰 처리
-    });
-}
-<!-- Modal -->
-<div class="modal fade" id="movieDetailModal" tabindex="-1" role="dialog" aria-labelledby="movieDetailModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="movieDetailModalLabel">영화 상세 정보</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <!-- 상세 정보와 리뷰 내용이 여기에 표시됩니다 -->
-      </div>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
