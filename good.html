@@ -42,6 +42,32 @@
         <button id="prev-page" class="btn btn-primary">이전 페이지</button>
         <button id="next-page" class="btn btn-primary">다음 페이지</button>
     </div>
+    function displayMovies(movies) {
+    // 평점순으로 영화를 내림차순 정렬
+    movies.sort((a, b) => b.vote_average - a.vote_average);
+
+    let moviesHtml = '';
+    movies.forEach(movie => {
+        const title = movie.title;
+        const overview = movie.overview;
+        const voteAverage = movie.vote_average;
+        const posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+        moviesHtml += `
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="${posterPath}" class="card-img-top" alt="${title}">
+                    <div class="card-body">
+                        <h5 class="card-title">${title}</h5>
+                        <p class="card-text">${overview}</p>
+                        <p class="card-text">평점: ${voteAverage}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    $('#movies-container').html(moviesHtml);
+}
+
   <div class="container my-4">
         <div class="row">
             <div class="col-12">
