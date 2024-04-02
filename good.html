@@ -122,6 +122,53 @@ $(document).ready(function() {
         }
     });
 });
+// 영화 검색 함수
+const searchMovies = (query) => {
+    const apiKey = '41b8d7f430c6240b738b350851b6bad4';
+    const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=ko-KR&query=${encodeURIComponent(query)}&include_adult=false`;
+
+    $.get(url, function(data) {
+        const movies = data.results.slice(0, 9);
+        let moviesHtml = '';
+        
+        movies.forEach(movie => {
+            if (movie.vote_average > 0) { // 평점이 0보다 큰 영화만 표시
+                const title = movie.title;
+                const overview = movie.overview;
+                const rating = movie.vote_average;
+                const posterPath = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '이미지가 없습니다.';
+                
+                moviesHtml += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="${posterPath}" class="card-img-top" alt="${title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${title}</h5>
+                                <p class="card-text">${overview}</p>
+                                <p class="card-text"><small class="text-muted">평점: ${rating}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+        
+        if (moviesHtml === '') {
+            $('#movies-container').html('<div class="col-12"><p>검색 결과가 없습니다.</p></div>');
+        } else {
+            $('#movies-container').html(moviesHtml);
+        }
+    });
+};
+
+// 검색 폼 제출 이벤트 리스너
+$('#search-form').submit(function(e) {
+    e.preventDefault(); // 폼 제출 기본 동작 방지
+    const query = $('#search-input').val().trim(); // 검색어 가져오기
+    if (query) {
+        searchMovies(query); // 영화 검색 함수 호출
+    }
+});
 
 
     </script>
